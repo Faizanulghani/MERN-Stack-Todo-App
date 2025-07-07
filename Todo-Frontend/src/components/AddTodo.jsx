@@ -19,28 +19,33 @@ function AddTodo({ onNewItem }) {
   };
 
   return (
-    <div className="container text-center">
-      <div className="row kg-row">
-        <div className="col-6">
-          <input
-            type="text"
-            placeholder="Enter Todo Here"
-            value={todoName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div className="col-4">
-          <input type="date" value={dueDate} onChange={handleDateChange} />
-        </div>
-        <div className="col-2">
-          <button
-            type="button"
-            className="btn btn-success kg-button"
-            onClick={handleAddButtonClicked}
-          >
-            Add
-          </button>
-        </div>
+    <div className="w-full max-w-2xl mx-auto mb-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <input
+          type="text"
+          placeholder="Enter todo here"
+          value={todoName}
+          onChange={handleNameChange}
+          className="flex-1 px-4 py-2 rounded-lg border border-gray-300
+                     focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+
+        <input
+          type="date"
+          value={dueDate}
+          onChange={handleDateChange}
+          className="flex-none w-full sm:w-44 px-4 py-2 rounded-lg border border-gray-300
+                     focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+
+        <button
+          type="button"
+          onClick={handleAddButtonClicked}
+          className="flex-none px-6 py-2 rounded-lg bg-emerald-500 text-white
+                     hover:bg-emerald-600 active:scale-95 transition"
+        >
+          Add
+        </button>
       </div>
     </div>
   );

@@ -2,12 +2,13 @@ import AppName from "./components/AppName";
 import AddTodo from "./components/AddTodo";
 import TodoItems from "./components/TodoItems";
 import WelcomeMessage from "./components/WelcomeMessage";
-import "./App.css";
+import "./app.css";
 import { useEffect, useState } from "react";
 import {
   addItemToServer,
   deleteItemFromServer,
   getItemsFromServer,
+  markItemCompletedOnServer,
 } from "./services/itemsServices";
 
 function App() {
@@ -15,7 +16,11 @@ function App() {
 
   useEffect(() => {
     getItemsFromServer().then((initialItems) => {
-      setTodoItems(initialItems);
+      const itemsWithCompletedStatus = initialItems.map((item) => ({
+        ...item,
+        completed: item.completed || false,
+      }));
+      setTodoItems(itemsWithCompletedStatus);
     });
   }, []);
 
@@ -32,16 +37,27 @@ function App() {
     setTodoItems(newTodoItems);
   };
 
+  const handleToggleComplete = async (id) => {
+    await markItemCompletedOnServer(id);
+    const updatedItems = todoItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, completed: true };
+      }
+      return item;
+    });
+
+    setTodoItems(updatedItems);
+  };
+
   return (
-    <center className="todo-container">
-      <AppName />
-      <AddTodo onNewItem={handleNewItem} />
-      {todoItems.length === 0 && <WelcomeMessage></WelcomeMessage>}
-      <TodoItems
-        todoItems={todoItems}
-        onDeleteClick={handleDeleteItem}
-      ></TodoItems>
-    </center>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-50 to-emerald-50 px-4">
+      <div className="w-full max-w-2xl">
+        <AppName />
+        <AddTodo onNewItem={handleNewItem} />
+        {todoItems.length === 0 && <WelcomeMessage />}
+        <TodoItems todoItems={todoItems} onDeleteClick={handleDeleteItem} onToggleComplete={handleToggleComplete} />
+      </div>
+    </div>
   );
 }
 
